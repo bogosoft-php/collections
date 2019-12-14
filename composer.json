@@ -1,0 +1,20 @@
+{
+    "name": "bogosoft/collections",
+    "description": "Contracts and implementations for working with sequences and collections.",
+    "license": "MIT",
+    "keywords": ["sequence", "sequences", "collections", "fluent"],
+    "autoload": {
+        "files": ["src/functions.php"],
+        "psr-4": {
+            "Bogosoft\\Collections\\": "src/",
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "bogosoft/core": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
+    }
+}
