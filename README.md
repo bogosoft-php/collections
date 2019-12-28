@@ -19,15 +19,20 @@ composer require bogosoft/collections
 
 #### Utility Functions
 
-The following functions all return an instance of the `Sequence` class.
+The following functions all return an instance of the `Sequence` class or provide `Sequence`-like logic in a functional manner.
 
 Function|Description
 --------|-----------
+`all(iterable, callable)`|Determine if all of the items in a given sequence match a given condition.
+`any(iterable, ?callable)`|Determine if any item in the given sequence matches a given condition.
 `seq(iterable)`|Creates a sequence from an iterable source (i.e., an `array` or anything that implements `Traversable`).
+`seqi(mixed, callable)`|Create a sequence from a singleton seed value and an expansion function.
 `seqv(mixed ... $items)`|Creates a sequence from zero or more variadic arguments.
 
 #### `Sequence` Methods
 
+- `all`
+- `any`
 - `append`
 - `apply`
 - `collect`

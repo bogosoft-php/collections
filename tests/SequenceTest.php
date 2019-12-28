@@ -12,10 +12,60 @@ use SplFixedArray;
 use SplQueue;
 use Traversable;
 use function Bogosoft\Collections\seq;
+use function Bogosoft\Collections\seqi;
 use function Bogosoft\Collections\seqv;
 
 class SequenceTest extends TestCase
 {
+    function testAllReturnsFalseWhenAtLeastOneItemInASequenceDoesNotMatchGivenPredicate(): void
+    {
+        $items = seq([0, 1]);
+
+        $this->assertFalse($items->all(fn(int $i): bool => $i > 0));
+    }
+
+    function testAllReturnsTrueWhenEveryItemInASequenceMatchesAGivenCondition(): void
+    {
+        $items = seq([1, 2, 3, 4, 5]);
+
+        $this->assertTrue($items->all(fn(int $i): bool => $i > 0));
+    }
+
+    function testAnyReturnsFalseForEmptySequence(): void
+    {
+        $items = seq();
+
+        $this->assertEmpty($items);
+        $this->assertFalse($items->any());
+    }
+
+    function testAnyReturnsFalseIfGivenConditionCannotBeMetOnNonEmptySequence(): void
+    {
+        $item  = 12;
+        $items = seq([$item]);
+
+        $this->assertNotEmpty($items);
+
+        $this->assertFalse($items->any(fn(int $i): bool => $i !== $item));
+    }
+
+    function testAnyReturnsTrueIfGivenConditionCanBeMetOnNonEmptySequence(): void
+    {
+        $items     = seq([0, 1, 2, 3, 4]);
+        $predicate = fn(int $i): bool => $i > 3;
+        $actual    = $items->any($predicate);
+
+        $this->assertTrue($actual);
+    }
+
+    function testAnyReturnsTrueIfSequenceHasAtLeastOneItemAndNoPredicateIsGiven(): void
+    {
+        $items = seq([0]);
+
+        $this->assertTrue(count($items) > 0);
+        $this->assertTrue($items->any());
+    }
+
     function testCallingGlobalCountFunctionAndSequenceCountMethodAreEquivalent() : void
     {
         $source = seq([0, 1, 2, 3, 4]);
@@ -126,6 +176,28 @@ class SequenceTest extends TestCase
 
         $this->assertInstanceOf(Sequence::class, $actual);
         $this->assertCount(4, $actual);
+    }
+
+    function testCanCreateSequenceFromSingletonValue(): void
+    {
+        $length   = 10;
+        $seed     = 0;
+        $expander = function(int $i) use ($length): iterable
+        {
+            for ($j = $i; $j < $i + $length; $j++)
+            {
+                yield $j;
+            }
+        };
+
+        $actual = seqi($seed, $expander)->toArray();
+
+        $this->assertEquals($length, count($actual));
+
+        for ($i = 0; $i < $length; $i++)
+        {
+            $this->assertEquals($seed + $i, $actual[$i]);
+        }
     }
 
     function testCanFilterValues() : void

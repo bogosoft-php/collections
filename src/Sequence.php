@@ -30,6 +30,63 @@ class Sequence implements Countable, IteratorAggregate
     }
 
     /**
+     * Determine if all of the items in the current sequence satisfy a given
+     * condition.
+     *
+     * The predicate is expected to be of the form:
+     * - fn({@see mixed}): {@see bool}
+     *
+     * @param  callable $predicate A condition with which each item in the
+     *                             current sequence will be checked against.
+     * @return bool                True if every item in the current sequence
+     *                             satisfies the given condition; false
+     *                             if at least one item does not match.
+     */
+    function all(callable $predicate): bool
+    {
+        foreach ($this as $item)
+        {
+            if (!$predicate($item))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine if the current sequence contains at least one item that matches
+     * a given predicate. If no predicate is given, the current sequence will be
+     * evaluated as to whether it is empty.
+     *
+     * The predicate is expected to be of the form:
+     * - fn({@see mixed}): {@see bool}
+     *
+     * @param  callable|null $predicate A condition with which the current sequence
+     *                                  will be checked.
+     * @return bool                     True if the given current contains at least
+     *                                  one item that satisfies the given condition;
+     *                                  false otherwise. If no predicate was given,
+     *                                  this function will return false if
+     *                                  the current sequence was empty.
+     */
+    function any(callable $predicate = null): bool
+    {
+        $predicate ??= fn($item): bool => true;
+
+        foreach ($this as $item)
+        {
+            if ($predicate($item))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Append zero or more items to the current sequence.
      *
      * @param  mixed    ...$items Item(s) to be appended to the current sequence.
