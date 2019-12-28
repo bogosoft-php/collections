@@ -108,6 +108,9 @@ function seqv(...$items) : Sequence
 /**
  * Sort a given sequence of items.
  *
+ * The comparer is expected to be of the form:
+ * - fn({@see mixed}, {@see mixed}): {@see int}
+ *
  * @param  iterable      $items    An array or an object that implements
  *                                 {@see Traversable}.
  * @param  callable|null $comparer A comparer to be applied to each item

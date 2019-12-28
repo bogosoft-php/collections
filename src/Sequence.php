@@ -9,7 +9,6 @@ use Countable;
 use InvalidArgumentException;
 use IteratorAggregate;
 use Traversable;
-use Throwable;
 use TypeError;
 
 /**
@@ -132,7 +131,7 @@ class Sequence implements Countable, IteratorAggregate
      * Apply either the current sequence or the result of folding the current sequence
      * to a given applicator function.
      *
-     * Applicator function form:
+     * The applicator is expected to be of the forms:
      * - No accumulator provided => fn({@see iterable} current_sequence): {@see mixed}
      * - Accumulator provider    => fn({@see mixed} accumulator_output): {@see mixed}
      *
@@ -162,7 +161,7 @@ class Sequence implements Countable, IteratorAggregate
      * Expand each item of the current sequence into its own sequence and flatten
      * the results into a single sequence.
      *
-     * Expander function form:
+     * The expander is expected to be of the form:
      * - fn({@see mixed}): {@see iterable}
      * 
      * @param  callable $expander A strategy for expanding an item into a sequence.
@@ -200,7 +199,7 @@ class Sequence implements Countable, IteratorAggregate
      * Count the number of items in the current sequence. An optional predicate can be provided
      * to filter the sequence before counting starts.
      *
-     * Predicate function form:
+     * The predicate is expected to be of the form:
      * - fn({@see mixed} item): {@see bool}
      *
      * @param  callable|null $predicate An optional predicate by which to filter the current
@@ -225,13 +224,14 @@ class Sequence implements Countable, IteratorAggregate
     }
 
     /**
-     * Filter the current sequence according to given criteria.
+     * Filter the current sequence according to a given condition.
      *
-     * Predicate function form:
+     * The predicate is expected to be of the form:
      * - fn({@see mixed} item): {@see bool}
      *
-     * @param  callable $predicate Criteria by which the current sequence is to be filtered.
-     * @return Sequence            The current sequence filtered.
+     * @param  callable $predicate A condition by which each item in the
+     *                             current sequence is to be filtered.
+     * @return Sequence            The current sequence, filtered.
      */
     function filter(callable $predicate) : Sequence
     {
@@ -264,7 +264,7 @@ class Sequence implements Countable, IteratorAggregate
      * Fold the current sequence into a single value using a given accumulator function
      * and an optional seed value.
      *
-     * Accumulator function form (if provided):
+     * The accumulator (if provided) is expected to be of the form:
      * - fn({@see mixed} accumulator_input, {@see mixed} item}: {@see mixed} accumulator_output
      *
      * @param  callable $accumulator An accumulator function. This function has the form:
@@ -288,7 +288,7 @@ class Sequence implements Countable, IteratorAggregate
      * Get either the first item in the current sequence or the first item in the current sequence that
      * matches a given predicate (if provided).
      *
-     * Predicate function form:
+     * The predicate is expected to be of the form:
      * - fn({@see mixed} item): {@see bool}
      *
      * @param  callable|null $predicate Criteria by which the current sequence is to be filtered first.
@@ -319,7 +319,7 @@ class Sequence implements Countable, IteratorAggregate
      * sequence is empty. An optional predicate can be supplied to filter the sequence before
      * trying to get the first value.
      *
-     * Predicate function form:
+     * The predicate is expected to be of the form:
      * - fn({@see mixed} item): {@see bool}
      *
      * @param mixed|null    $default   A default value to return if the sequence is empty.
@@ -360,7 +360,7 @@ class Sequence implements Countable, IteratorAggregate
      * Get the last item in the current sequence. An optional predicate can supplied to filter
      * the sequence before attempting to get the last item.
      *
-     * Predicate function form:
+     * The predicate is expected to be of the form:
      * - fn({@see mixed} item): {@see bool}
      *
      * @param  callable|null $predicate Criteria by which the current sequence is to be filtered first.
@@ -396,7 +396,7 @@ class Sequence implements Countable, IteratorAggregate
      * optional predicate can be supplied to filter the current sequence before attempting to get
      * the last item.
      *
-     * Predicate function form:
+     * The predicate is expected to be of the form:
      * - fn({@see mixed} item): {@see bool}
      *
      * @param  mixed|null               A default value to return if the current sequence is empty.
@@ -423,7 +423,7 @@ class Sequence implements Countable, IteratorAggregate
      * Get the only item from the current sequence. An optional predicate can be provided to
      * filter the current sequence before the operation.
      *
-     * Predicate function form:
+     * The predicate is expected to be of the form:
      * - fn({@see mixed} item): {@see bool}
      *
      * @param  callable|null $predicate An optional set of criteria for filtering the current
@@ -465,7 +465,7 @@ class Sequence implements Countable, IteratorAggregate
      * sequence contains zero or more than one item. An optional predicate can be provided
      * to filter the current sequence before the operation.
      *
-     * Predicate function form:
+     * The predicate is expected to be of the form:
      * - fn({@see mixed} item): {@see bool}
      *
      * @param null          $default   A default value to be used in the event that the
@@ -511,7 +511,7 @@ class Sequence implements Countable, IteratorAggregate
     /**
      * Iterate through the current sequence and apply the given action to each item.
      *
-     * Action form:
+     * The action is expected to be of the form:
      * - fn({@see mixed} item): {@see void}
      *
      * @param callable $action An action to be applied to each item in the current sequence.
@@ -527,7 +527,7 @@ class Sequence implements Countable, IteratorAggregate
     /**
      * Project each item in the current sequence into a different form.
      *
-     * Mapper function form:
+     * The mapper is expected to be of the form:
      * - fn({@see mixed} item): {@see mixed}
      *
      * @param  callable $mapper A strategy for projecting an item into a different form.
@@ -628,6 +628,9 @@ class Sequence implements Countable, IteratorAggregate
 
     /**
      * Sort the current sequence.
+     *
+     * The comparer is expected to be of the form:
+     * - fn({@see mixed}, {@see mixed}): {@see int}
      *
      * @param  callable|null $comparer A comparer to be applied to each item
      *                                 in the current sequence. If omitted,
