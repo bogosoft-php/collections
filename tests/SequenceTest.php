@@ -370,6 +370,79 @@ class SequenceTest extends TestCase
         }
     }
 
+    function testCanSortComparablesInAscendingOrder(): void
+    {
+        /** @var Person[] $people */
+        $people   = seqi(16, PersonGenerator::class . '::generate')->toArray();
+        $expected = $people;
+
+        usort($expected, fn(Person $a, Person $b): int => $a->age - $b->age);
+
+        /** @var Person[] $actual */
+        $actual = seq($people)->sortc()->toArray();
+
+        $this->assertEquals(count($expected), count($actual));
+
+        for ($i = 0; $i < count($expected); $i++)
+        {
+            $this->assertEquals($expected[$i]->name, $actual[$i]->name);
+        }
+    }
+
+    function testCanSortComparableInDescendingOrder(): void
+    {
+        /** @var Person[] $people */
+        $people   = seqi(16, PersonGenerator::class . '::generate')->toArray();
+        $expected = $people;
+
+        usort($expected, fn(Person $a, Person $b): int => $b->age - $a->age);
+
+        /** @var Person[] $actual */
+        $actual = seq($people)->sortc(true)->toArray();
+
+        $this->assertEquals(count($expected), count($actual));
+
+        for ($i = 0; $i < count($expected); $i++)
+        {
+            $this->assertEquals($expected[$i]->name, $actual[$i]->name);
+        }
+    }
+
+    function testCanSortUsingDefaultAlgorithm(): void
+    {
+        $integers = [0, 5, 3, 4, 1, 9, 7, 8, 2, 5, 6, 5];
+        $expected = $integers;
+
+        usort($expected, fn(int $a, int $b) => $a - $b);
+
+        $actual = seq($integers)->sort()->toArray();
+
+        $this->assertEquals(count($expected), count($actual));
+
+        for ($i = 0; $i < count($expected); $i++)
+        {
+            $this->assertEquals($expected[$i], $actual[$i]);
+        }
+    }
+
+    function testCanSortUsingGivenAlgorithm(): void
+    {
+        $integers = [0, 5, 3, 4, 1, 9, 7, 8, 2, 5, 6, 5];
+        $expected = $integers;
+        $comparer = fn(int $a, int $b): int => $a * 2 + $b;
+
+        usort($expected, $comparer);
+
+        $actual = seq($integers)->sort($comparer)->toArray();
+
+        $this->assertEquals(count($expected), count($actual));
+
+        for ($i = 0; $i < count($expected); $i++)
+        {
+            $this->assertEquals($expected[$i], $actual[$i]);
+        }
+    }
+
     function testCanTakeASpecifiedNumberOfItems() : void
     {
         $amount = 2;
@@ -514,6 +587,15 @@ class SequenceTest extends TestCase
         $this->expectException(InvalidOperationException::class);
 
         seq()->getSingle();
+    }
+
+    function testSortingNonComparableSequenceWithComparableMethodThrowsInvalidOperationException() : void
+    {
+        $integers = seq([0, 3, 2, 1, 4]);
+
+        $this->expectException(InvalidOperationException::class);
+
+        $integers->sortc();
     }
 
     function testThrowsInvalidArgumentExceptionWhenSkipCountIsLessThanZero() : void

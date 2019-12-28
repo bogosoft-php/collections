@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bogosoft\Collections;
 
+use Bogosoft\Core\InvalidOperationException;
 use Traversable;
 
 /**
@@ -86,4 +87,43 @@ function seqi($seed, callable $expander): Sequence
 function seqv(...$items) : Sequence
 {
     return new Sequence($items);
+}
+
+/**
+ * Sort a given sequence of items.
+ *
+ * @param  iterable      $items    An array or an object that implements
+ *                                 {@see Traversable}.
+ * @param  callable|null $comparer A comparer to be applied to each item
+ *                                 in the current sequence. If omitted,
+ *                                 a default, naive algorithm will be
+ *                                 used instead.
+ * @return Sequence                A new, sorted sequence.
+ */
+function sort(iterable $items, callable $comparer = null): Sequence
+{
+    return seq($items)->sort($comparer);
+}
+
+/**
+ * Sort a given sequence of items using their own comparison
+ * methods.
+ *
+ * NOTE: This function assumes all items in the given sequence
+ * implement the {@see IComparable} interface.
+
+ * @param  iterable $items      A sequence of items to sort.
+ * @param  bool     $descending Whether or not the sequence is to be
+ *                              sorted in ascending or descending
+ *                              order.
+ * @return Sequence             A new, sorted sequence.
+ *
+ * @throws InvalidOperationException when the sequence is not wholly
+ *                                   comprised of objects that
+ *                                   implement the {@see IComparable}
+ *                                   interface.
+ */
+function sortc(iterable $items, bool $descending = true): Sequence
+{
+    return seq($items)->sortc($descending);
 }

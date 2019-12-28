@@ -9,6 +9,8 @@ use Countable;
 use InvalidArgumentException;
 use IteratorAggregate;
 use Traversable;
+use Throwable;
+use TypeError;
 
 /**
  * Represents a sequence of items.
@@ -17,6 +19,18 @@ use Traversable;
  */
 class Sequence implements Countable, IteratorAggregate
 {
+    private static function sortDefault($a, $b): int
+    {
+        if ($a == $b)
+        {
+            return 0;
+        }
+        else
+        {
+            return $a > $b ? 1 : -1;
+        }
+    }
+
     private iterable $source;
 
     /**
@@ -610,6 +624,59 @@ class Sequence implements Countable, IteratorAggregate
                 }
             }
         };
+    }
+
+    /**
+     * Sort the current sequence.
+     *
+     * @param  callable|null $comparer A comparer to be applied to each item
+     *                                 in the current sequence. If omitted,
+     *                                 a default, naive algorithm will be
+     *                                 used instead.
+     * @return Sequence                The current sequence, sorted.
+     */
+    function sort(callable $comparer = null): Sequence
+    {
+        $comparer ??= Sequence::class . '::sortDefault';
+
+        $items = $this->toArray();
+
+        usort($items, $comparer);
+
+        return new Sequence($items);
+    }
+
+    /**
+     * Sort the current sequence of items using their own comparison
+     * methods.
+     *
+     * NOTE: This method assumes all items in the current sequence
+     * implement the {@see IComparable} interface.
+     *
+     * @param  bool     $descending Whether or not the sequence is to be
+     *                              sorted in ascending or descending
+     *                              order.
+     * @return Sequence             The current sequence, sorted.
+     *
+     * @throws InvalidOperationException when the sequence is not wholly
+     *                                   comprised of objects that
+     *                                   implement the {@see IComparable}
+     *                                   interface.
+     */
+    function sortc(bool $descending = false): Sequence
+    {
+        $multiplier = $descending ? -1 : 1;
+
+        $comparer = fn(IComparable $a, IComparable $b): int => $a->compare($b) * $multiplier;
+
+        try
+        {
+            return $this->sort($comparer);
+        }
+        catch (TypeError $te)
+        {
+            throw new InvalidOperationException('', 0, $te);
+        }
     }
 
     /**

@@ -28,6 +28,8 @@ Function|Description
 `seq(iterable)`|Creates a sequence from an iterable source (i.e., an `array` or anything that implements `Traversable`).
 `seqi(mixed, callable)`|Create a sequence from a singleton seed value and an expansion function.
 `seqv(mixed ... $items)`|Creates a sequence from zero or more variadic arguments.
+`sort(iterable, ?callable)`|Sort a sequence with an optional comparer.
+`sortc(iterable, bool)`|Sort a sequence of `IComparable` objects in either ascending or descending order.
 
 #### `Sequence` Methods
 
@@ -49,5 +51,7 @@ Function|Description
 - `map`
 - `prepend`
 - `skip`
+- `sort`
+- `sortc`
 - `take`
 - `toArray`
