@@ -52,6 +52,22 @@ function any(iterable $items, callable $predicate = null): bool
 }
 
 /**
+ * Filter a given sequence according to a given condition.
+ *
+ * The predicate is expected to be of the form:
+ * - fn({@see mixed}): {@see bool}
+
+ * @param  iterable $items     A sequence to be filtered.
+ * @param  callable $predicate A condition by which each item in the given
+ *                             sequence is to be filtered.
+ * @return Sequence            A filtered sequence.
+ */
+function filter(iterable $items, callable $predicate): Sequence
+{
+    return seq($items)->filter($predicate);
+}
+
+/**
  * Create a new {@see Sequence} from a given iterable object.
  *
  * @param  iterable $source An iterable object.
