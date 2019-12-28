@@ -6,13 +6,17 @@
     "autoload": {
         "files": ["src/functions.php"],
         "psr-4": {
-            "Bogosoft\\Collections\\": "src/",
+            "Bogosoft\\Collections\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Tests\\": "tests/"
         }
     },
     "require": {
         "php": ">=7.4",
-        "bogosoft/core": "^1.1"
+        "bogosoft/core": "^2"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5"
