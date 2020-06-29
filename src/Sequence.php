@@ -173,12 +173,8 @@ class Sequence implements Countable, IteratorAggregate
             function getIterator() : Traversable
             {
                 foreach ($this->getSource() as $x)
-                {
                     foreach (($this->expander)($x) as $y)
-                    {
                         yield $y;
-                    }
-                }
             }
         };
     }
@@ -201,9 +197,7 @@ class Sequence implements Countable, IteratorAggregate
             $i = 0;
 
             foreach ($this->getIterator() as $item)
-            {
                 ++$i;
-            }
 
             return $i;
         }
@@ -238,12 +232,8 @@ class Sequence implements Countable, IteratorAggregate
             function getIterator() : Traversable
             {
                 foreach ($this->getSource() as $item)
-                {
                     if (($this->predicate)($item))
-                    {
                         yield $item;
-                    }
-                }
             }
         };
     }
