@@ -141,10 +141,13 @@ class SequenceTest extends TestCase
             }
         };
 
-        $values = [...seq($generate())];
+        $values = seq($generate())->toArray();
 
         $this->assertTrue(is_array($values));
         $this->assertEquals($limit, count($values));
+
+        for ($i = 0; $i < $limit; $i++)
+            $this->assertEquals($i, $values[$i]);
     }
 
     function testCanCountAllItemsInANonEmptySequence() : void

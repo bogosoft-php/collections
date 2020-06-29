@@ -668,4 +668,14 @@ class Sequence implements Countable, IteratorAggregate
             }
         };
     }
+
+    /**
+     * Convert the current sequence into an array.
+     *
+     * @return array An array of items in the current sequence.
+     */
+    function toArray(): array
+    {
+        return [...$this];
+    }
 }
