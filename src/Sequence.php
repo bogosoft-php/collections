@@ -231,9 +231,9 @@ class Sequence implements Countable, IteratorAggregate
 
             function getIterator() : Traversable
             {
-                foreach ($this->getSource() as $item)
-                    if (($this->predicate)($item))
-                        yield $item;
+                foreach ($this->getSource() as $key => $value)
+                    if (($this->predicate)($value))
+                        yield $key => $value;
             }
         };
     }
@@ -507,8 +507,8 @@ class Sequence implements Countable, IteratorAggregate
 
             function getIterator() : Traversable
             {
-                foreach ($this->getSource() as $item)
-                    yield ($this->mapper)($item);
+                foreach ($this->getSource() as $key => $value)
+                    yield $key => ($this->mapper)($value);
             }
         };
     }
@@ -569,9 +569,9 @@ class Sequence implements Countable, IteratorAggregate
             {
                 $i = 0;
 
-                foreach ($this->getSource() as $item)
+                foreach ($this->getSource() as $key => $value)
                     if ($i++ >= $this->count)
-                        yield $item;
+                        yield $key => $value;
             }
         };
     }
@@ -660,9 +660,9 @@ class Sequence implements Countable, IteratorAggregate
             {
                 $taken = 0;
 
-                foreach ($this->getSource() as $item)
+                foreach ($this->getSource() as $key => $value)
                     if ($taken++ < $this->count)
-                        yield $item;
+                        yield $key => $value;
                     else
                         break;
             }
