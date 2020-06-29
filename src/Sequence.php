@@ -21,13 +21,9 @@ class Sequence implements Countable, IteratorAggregate
     private static function sortDefault($a, $b): int
     {
         if ($a == $b)
-        {
             return 0;
-        }
         else
-        {
             return $a > $b ? 1 : -1;
-        }
     }
 
     private iterable $source;
@@ -58,12 +54,8 @@ class Sequence implements Countable, IteratorAggregate
     function all(callable $predicate): bool
     {
         foreach ($this as $item)
-        {
             if (!$predicate($item))
-            {
                 return false;
-            }
-        }
 
         return true;
     }
@@ -89,12 +81,8 @@ class Sequence implements Countable, IteratorAggregate
         $predicate ??= fn($item): bool => true;
 
         foreach ($this as $item)
-        {
             if ($predicate($item))
-            {
                 return true;
-            }
-        }
 
         return false;
     }
@@ -277,9 +265,7 @@ class Sequence implements Countable, IteratorAggregate
         $result = $seed;
 
         foreach ($this as $item)
-        {
             $result = $accumulator($result, $item);
-        }
 
         return $result;
     }
@@ -302,9 +288,7 @@ class Sequence implements Countable, IteratorAggregate
         if (null === $predicate)
         {
             foreach ($this::getIterator() as $item)
-            {
                 return $item;
-            }
 
             throw new InvalidOperationException('Sequence is empty.');
         }
@@ -333,9 +317,7 @@ class Sequence implements Countable, IteratorAggregate
         if (null === $predicate)
         {
             foreach ($this->getIterator() as $item)
-            {
                 return $item;
-            }
 
             return $default;
         }
@@ -351,9 +333,7 @@ class Sequence implements Countable, IteratorAggregate
     function getIterator() : Traversable
     {
         foreach ($this->source as $item)
-        {
             yield $item;
-        }
     }
 
     /**
@@ -384,9 +364,7 @@ class Sequence implements Countable, IteratorAggregate
         }
 
         if ($empty)
-        {
             throw new InvalidOperationException('The sequence is empty.');
-        }
 
         return $found;
     }
@@ -412,9 +390,7 @@ class Sequence implements Countable, IteratorAggregate
         $found = $default;
 
         foreach ($seq as $item)
-        {
             $found = $item;
-        }
 
         return $found;
     }
@@ -445,17 +421,13 @@ class Sequence implements Countable, IteratorAggregate
         foreach ($seq as $item)
         {
             if (++$count > 1)
-            {
                 throw new InvalidOperationException('The sequence contains more than one (1) item.');
-            }
 
             $found = $item;
         }
 
         if (0 === $count)
-        {
             throw new InvalidOperationException('The sequence contains more than a single item.');
-        }
 
         return $found;
     }
@@ -488,9 +460,7 @@ class Sequence implements Countable, IteratorAggregate
         foreach ($seq as $item)
         {
             if (++$count > 1)
-            {
                 return $default;
-            }
 
             $found = $item;
         }
@@ -519,9 +489,7 @@ class Sequence implements Countable, IteratorAggregate
     function iter(callable $action) : void
     {
         foreach ($this as $item)
-        {
             $action($item);
-        }
     }
 
     /**
@@ -550,9 +518,7 @@ class Sequence implements Countable, IteratorAggregate
             function getIterator() : Traversable
             {
                 foreach ($this->getSource() as $item)
-                {
                     yield ($this->mapper)($item);
-                }
             }
         };
     }
@@ -596,9 +562,7 @@ class Sequence implements Countable, IteratorAggregate
     function skip(int $count) : Sequence
     {
         if ($count < 0)
-        {
             throw new InvalidArgumentException('The amount to skip cannot be less than zero (0).');
-        }
 
         return new class($this, $count) extends Sequence
         {
@@ -616,12 +580,8 @@ class Sequence implements Countable, IteratorAggregate
                 $i = 0;
 
                 foreach ($this->getSource() as $item)
-                {
                     if ($i++ >= $this->count)
-                    {
                         yield $item;
-                    }
-                }
             }
         };
     }
@@ -693,9 +653,7 @@ class Sequence implements Countable, IteratorAggregate
     function take(int $count) : Sequence
     {
         if ($count < 0)
-        {
             throw new InvalidArgumentException('The amount to take cannot be less than zero (0).');
-        }
 
         return new class($this, $count) extends Sequence
         {
@@ -713,16 +671,10 @@ class Sequence implements Countable, IteratorAggregate
                 $taken = 0;
 
                 foreach ($this->getSource() as $item)
-                {
                     if ($taken++ < $this->count)
-                    {
                         yield $item;
-                    }
                     else
-                    {
                         break;
-                    }
-                }
             }
         };
     }
@@ -737,9 +689,7 @@ class Sequence implements Countable, IteratorAggregate
         $items = [];
 
         foreach ($this as $item)
-        {
             $items[] = $item;
-        }
 
         return $items;
     }
