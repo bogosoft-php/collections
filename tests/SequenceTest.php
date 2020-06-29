@@ -76,7 +76,7 @@ class SequenceTest extends TestCase
     function testCanAppendItemsToASequence() : void
     {
         $expect = [1, 2, 3, 4];
-        $actual = seq(['0'])->append(...$expect)->toArray();
+        $actual = [...seq(['0'])->append(...$expect)];
         $this->assertEquals(count($expect) + 1, count($actual));
         $this->assertEquals(0, $actual[0]);
 
@@ -141,7 +141,7 @@ class SequenceTest extends TestCase
             }
         };
 
-        $values = seq($generate())->toArray();
+        $values = [...seq($generate())];
 
         $this->assertTrue(is_array($values));
         $this->assertEquals($limit, count($values));
@@ -190,7 +190,7 @@ class SequenceTest extends TestCase
             }
         };
 
-        $actual = seqi($seed, $expander)->toArray();
+        $actual = [...seqi($seed, $expander)];
 
         $this->assertEquals($length, count($actual));
 
@@ -227,7 +227,7 @@ class SequenceTest extends TestCase
 
         $expander = fn(array $x): array => $x;
 
-        $actual = seq($values)->collect($expander)->toArray();
+        $actual = [...seq($values)->collect($expander)];
 
         $j = 0;
 
@@ -347,7 +347,7 @@ class SequenceTest extends TestCase
     function testCanPrependItemsToASequence() : void
     {
         $expect = [0, 1, 2, 3];
-        $actual = seq([4])->prepend(...$expect)->toArray();
+        $actual = [...seq([4])->prepend(...$expect)];
 
         for ($i = 0; $i < count($expect); $i++)
         {
@@ -373,13 +373,13 @@ class SequenceTest extends TestCase
     function testCanSortComparablesInAscendingOrder(): void
     {
         /** @var Person[] $people */
-        $people   = seqi(16, PersonGenerator::class . '::generate')->toArray();
+        $people   = [...seqi(16, PersonGenerator::class . '::generate')];
         $expected = $people;
 
         usort($expected, fn(Person $a, Person $b): int => $a->age - $b->age);
 
         /** @var Person[] $actual */
-        $actual = seq($people)->sortc()->toArray();
+        $actual = [...seq($people)->sortc()];
 
         $this->assertEquals(count($expected), count($actual));
 
@@ -392,13 +392,13 @@ class SequenceTest extends TestCase
     function testCanSortComparableInDescendingOrder(): void
     {
         /** @var Person[] $people */
-        $people   = seqi(16, PersonGenerator::class . '::generate')->toArray();
+        $people   = [...seqi(16, PersonGenerator::class . '::generate')];
         $expected = $people;
 
         usort($expected, fn(Person $a, Person $b): int => $b->age - $a->age);
 
         /** @var Person[] $actual */
-        $actual = seq($people)->sortc(true)->toArray();
+        $actual = [...seq($people)->sortc(true)];
 
         $this->assertEquals(count($expected), count($actual));
 
@@ -415,7 +415,7 @@ class SequenceTest extends TestCase
 
         usort($expected, fn(int $a, int $b) => $a - $b);
 
-        $actual = seq($integers)->sort()->toArray();
+        $actual = [...seq($integers)->sort()];
 
         $this->assertEquals(count($expected), count($actual));
 
@@ -433,7 +433,7 @@ class SequenceTest extends TestCase
 
         usort($expected, $comparer);
 
-        $actual = seq($integers)->sort($comparer)->toArray();
+        $actual = [...seq($integers)->sort($comparer)];
 
         $this->assertEquals(count($expected), count($actual));
 

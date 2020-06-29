@@ -592,7 +592,7 @@ class Sequence implements Countable, IteratorAggregate
     {
         $comparer ??= Sequence::class . '::sortDefault';
 
-        $items = $this->toArray();
+        $items = [...$this];
 
         usort($items, $comparer);
 
@@ -667,20 +667,5 @@ class Sequence implements Countable, IteratorAggregate
                         break;
             }
         };
-    }
-
-    /**
-     * Convert the current sequence into an array.
-     *
-     * @return array An array of the items in the current sequence.
-     */
-    function toArray() : array
-    {
-        $items = [];
-
-        foreach ($this as $item)
-            $items[] = $item;
-
-        return $items;
     }
 }
